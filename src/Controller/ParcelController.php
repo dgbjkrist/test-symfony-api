@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use OpenApi\Annotations as OA;
 
 class ParcelController extends AbstractController
 {
@@ -46,6 +47,16 @@ class ParcelController extends AbstractController
      * @param  ParcelRepository $parcelRepo [description]
      * @param  [type]           $id         [description]
      * @return JsonResponse description
+     * @OA\Get(
+     *     path="/parcels/{id}",
+     *     @OA\Response(
+     *         response="200",
+     *         description="retourne une ressource",
+     *         @OA\JsonContent(
+     *             type="string"
+     *         )
+     *     )
+     * )
      */
     public function getParcel(ParcelRepository $parcelRepo, $id):JsonResponse
     {

@@ -1,0 +1,19 @@
+openapi: 3.0.0
+info:
+  title: 'Documentation de parcel tracking API'
+  version: '0.1'
+servers:
+  -
+    url: '127.0.0.1:8000'
+    description: 'parcel tracking API'
+paths:
+  '/parcels/{id}':
+    get:
+      operationId: 'App\Controller\ParcelController::getParcel'
+      responses:
+        '200':
+          description: 'retourne une ressource'
+          content:
+            application/json:
+              schema:
+                type: string
