@@ -6,6 +6,7 @@ use App\Entity\Traits\Timestampable;
 use App\Repository\ParcelRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -21,66 +22,79 @@ class Parcel
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\CustomIdGenerator(class=UuidV4Generator::class)
+     * @Groups({"get:parcels"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $parcel_name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $point_depart;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $point_final;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $valeur_colis;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $price_expedition;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="parcels")
+     * @Groups({"get:parcels"})
      */
     private $destinataire;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="parcels")
+     * @Groups({"get:parcels"})
      */
     private $expediteur;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $descrip_colis;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $status_tracking;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $date_depart;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $date_arrived;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get:parcels"})
      */
     private $code_retrait;
 

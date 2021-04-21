@@ -2,10 +2,13 @@
 
 namespace App\Entity\Traits;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+
 trait Timestampable
 {
 	/**
      * @ORM\Column(type="datetime_immutable", options={"default":"CURRENT_TIMESTAMP"})
+     * @Groups({"get:parcels"})
      */
     private $createdAt;
 
