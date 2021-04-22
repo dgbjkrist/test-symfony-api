@@ -29,12 +29,19 @@ class AppFixtures extends Fixture
     {
     	$faker = \Faker\Factory::create('fr_FR');
 
+    	
+
     	$users=[];
 
+
     	for ($i=0; $i < 10 ; $i++) { 
+    		$fakeusers = [
+                'username' => 'antoine'.$i,
+                'password' => 'secret'.$i
+            ];
     		$user = new User();
-    		$user->setUsername($faker->username())
-				 ->setPassword($this->userPasswordEncoder->encodePassword($user, $i."secret"))
+    		$user->setUsername($fakeusers['username'])
+				 ->setPassword($this->userPasswordEncoder->encodePassword($user, $fakeusers['password']))
 				 ->setNom($faker->lastName())
 				 ->setPrenoms($faker->firstNameMale())
 				 ->setEmail($faker->email())
@@ -50,14 +57,16 @@ class AppFixtures extends Fixture
 	    		# code...
 	    		shuffle($users);
 	    		$userSlice= array_slice($users, 7);
+
+	    		$parcelvalue = mt_rand(1, 100)*10000;
 	    		
 	    		$parcel = new Parcel();
 		    	$parcel->setParcelName($faker->words(3, true))
 					   ->setPointDepart($faker->city())
 					   ->setPointFinal($faker->city())
 					   // ->setPointFinal($faker->words(1, true))
-					   ->setValeurColis(mt_rand(1, 100)*10000)
-					   ->setPriceExpedition($setValeurColis/100)
+					   ->setValeurColis($parcelvalue)
+					   ->setPriceExpedition($parcelvalue/100)
 					   ->setDestinataire($userSlice[0])
 					   ->setExpediteur($userSlice[1])
 					   ->setDescripColis($faker->paragraph())

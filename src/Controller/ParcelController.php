@@ -12,25 +12,16 @@ use OpenApi\Annotations as OA;
 
 class ParcelController extends AbstractController
 {
-    /**
-     * @Route("/parcel", name="parcel")
-     */
-    public function index(): Response
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ParcelController.php',
-        ]);
-    }
 
     /**
      * @Route("/parcels", methods="GET")
      * @return Json
      */
-    public function getParcels(ParcelRepository $parcelRepo):JsonResponse
+    public function getParcels(ParcelRepository $parcelRepo, SerializerInterface $serializer):JsonResponse
     {
         # code...
         $parcels = $parcelRepo->findAll();
+
         $response = $this->json($parcels, 200, [], ['groups'=>'get:parcels']);
         return $response;
         // dump($data);
