@@ -51,27 +51,6 @@ class ParcelController extends AbstractController
      * @param  ParcelRepository $parcelRepo [description]
      * @param  [type]           $id         [description]
      * @return JsonResponse description
-     * @OA\Get(
-     *     path="/parcels/{id}",
-     *     security={"bearer"},
-     *     summary="detail d'un colis",
-     *     @OA\Parameter(
-     *         description="return an identified parcel",
-     *         in="path",
-     *         name="id",
-     *         required=true,
-     *         @OA\Schema(type="string"),
-     *         @OA\Examples(example="uuid", value="0006faf6-7a61-426c-9034-579f2cfcfa83", summary="UUID value."),
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="OK",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Parcel")
-     *         ),
-     *     )
-     * )
      */
     public function getParcel(ParcelRepository $parcelRepo, $id):JsonResponse
     {

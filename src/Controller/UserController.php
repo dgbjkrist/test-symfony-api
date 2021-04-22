@@ -25,24 +25,6 @@ class UserController extends AbstractController
      * @param  EntityManagerInterface       $em      [description]
      * @return JsonResponse                                [description]
      * @Route("/users", methods={"POST"})
-     * @OA\Post(
-     *     path="/users",
-     *     summary="Creer un nouvel utilisateur",
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="application/json",
-     *             @OA\Schema(
-     *                 @OA\Items(
-     *                 ref="#/components/schemas/User"
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="OK"
-     *     )
-     * )
      */
     public function register(Request $request,
         SerializerInterface $serializer,
@@ -60,16 +42,6 @@ class UserController extends AbstractController
             $datauser = $serializer->deserialize($datas, User::class, 'json');
 
             $datauser->setPassword($encoder->encodePassword($datauser, $pwd));
-
-            // $errors = $validator->validate($datauser);
-
-            // dd($errors);
-
-            if ($validator->validate($datauser)) {
-                return $this->json([
-                    'message'=>'Le username est deja utilise',
-                    'status code'=> 400], 400);
-            }
 
             $em->persist($datauser);
 
