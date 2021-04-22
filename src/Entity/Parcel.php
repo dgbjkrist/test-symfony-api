@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Entity\Traits\Timestampable;
 use App\Repository\ParcelRepository;
 use Doctrine\ORM\Mapping as ORM;
-use OpenApi\Annotations\Schema;
 use Open\Annotations as OA;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,7 +14,6 @@ use Symfony\Component\Uid\Uuid;
  * @ORM\Entity(repositoryClass=ParcelRepository::class)
  * @ORM\Table(name="parcels")
  * @ORM\HasLifecycleCallbacks
- * @OA\Schema()
  */
 class Parcel
 {
@@ -26,7 +24,6 @@ class Parcel
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\CustomIdGenerator(class=UuidV4Generator::class)
      * @Groups({"getcollectionofparcel", "parcel"})
-     * @OA\Property(type="integer")
      * @var int|null identifiant unique au format uuid 18292e08-953f-470f-beba-06daa24c0cc3
      */
     private $id;
@@ -34,7 +31,6 @@ class Parcel
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"getcollectionofparcel", "parcel"})
-     * @OA\Property(type="string", nullable=true)
      * @var string|null le titre du colis
      */
     private $parcel_name;
@@ -42,7 +38,6 @@ class Parcel
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"parcel"})
-     * @OA\Property(type="string", nullable=true)
      * @var string|null le lieu de depart du colis (ville|quartier)
      */
     private $point_depart;
@@ -50,7 +45,6 @@ class Parcel
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"parcel"})
-     * @OA\Property(type="string", nullable=true)
      * @var string|null la destination du colis (ville|quartier)
      */
     private $point_final;
@@ -58,7 +52,6 @@ class Parcel
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"parcel"})
-     * @OA\Property(type="integer", nullable=true)
      * @var integer|null l'estimation monetaire du contenu du colis
      */
     private $valeur_colis;
@@ -66,7 +59,6 @@ class Parcel
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"parcel"})
-     * @OA\Property(type="int", nullable=true)
      * @var int|null le prix pour l'expedition du colis
      */
     private $price_expedition;
@@ -74,7 +66,6 @@ class Parcel
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="parcels")
      * @Groups({"getcollectionofparcel", "parcel"})
-     * @OA\Property(type="integer")
      * @var integer les reférences du destinataire
      */
     private $destinataire;
@@ -82,7 +73,6 @@ class Parcel
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="parcels")
      * @Groups({"getcollectionofparcel", "parcel"})
-     * @OA\Property(type="integer")
      * @var integer les reférences de l'expediteur
      */
     private $expediteur;
@@ -90,7 +80,6 @@ class Parcel
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"parcel"})
-     * @OA\Property(type="text", nullable=true)
      * @var text|null la description du colis(les différents éléments du colis)
      */
     private $descrip_colis;
@@ -98,7 +87,6 @@ class Parcel
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * @Groups({"parcel"})
-     * @OA\Property(type="integer", nullable=true)
      * @var integer|null le colis est arrivé à destination ou en cours
      */
     private $status_tracking;
@@ -106,7 +94,6 @@ class Parcel
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"parcel"})
-     * @OA\Property(type="string", format="date-time", nullable=true)
      * @var \DatetimeInterface|null la date de depart du colis
      */
     private $date_depart;
@@ -114,7 +101,6 @@ class Parcel
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"parcel"})
-     * @OA\Property(type="string", format="date-time", nullable=true)
      * @var \DatetimeInterface|null la date d'arrivé du colis
      */
     private $date_arrived;
@@ -122,7 +108,6 @@ class Parcel
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"parcel"})
-     * @OA\Property(type="string", nullable=true)
      * @var string|null code de retrait à presenté par le destinataire du colis
      */
     private $code_retrait;
