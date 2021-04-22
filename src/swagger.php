@@ -7,4 +7,7 @@ use OpenApi\Annotations as OA;
  * 		url="127.0.0.1:8000",
  *   	description="parcel tracking API"
  * )
+ * 
+ * 
+ * @OA\SecruityScheme(bearerFormat="JWT", type="apiKey", securityScheme="bearer")
  */

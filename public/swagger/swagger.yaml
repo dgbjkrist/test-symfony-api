@@ -7,13 +7,177 @@ servers:
     url: '127.0.0.1:8000'
     description: 'parcel tracking API'
 paths:
-  '/parcels/{id}':
-    get:
-      operationId: 'App\Controller\ParcelController::getParcel'
+
+  /users:
+    post:
+      summary: '1- Creer un nouvel utilisateur'
+      operationId: 'App\Controller\UserController::register'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/User'
       responses:
         '200':
-          description: 'retourne une ressource'
+          description: OK
+        '400':
+          description: BAD REQUEST
+  /api/login_check:
+    post:
+      summary: '2- Generer un token'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              type: object
+              example:
+                username: 'Jessica Smith'
+                password: 'phrasedepasse'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: BAD REQUEST
+  /api/parcels:
+    get:
+      summary: '3- Listing de tous les colis'
+      operationId: 'App\Controller\ParcelController::getParcels'
+      responses:
+        '200':
+          description: OK
           content:
             application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: format UID
+                  parcel_name:
+                    type: string
+                    description: nom attribué au colis
+                  destinataire:
+                    type: object
+                    description: nom +prenom + username + numero de telephone du destinataire
+                  expediteur:
+                    type: object
+                    description: nom +prenom + username + numero de telephone du destinataire
+      security:
+        - bearerAuth: []
+  '/api/parcels/{id}':
+    get:
+      summary: '4- Detail d''un colis'
+      operationId: 'App\Controller\ParcelController::getParcel'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'return an identified parcel'
+          required: true
+          schema:
+            type: string
+          examples:
+            -
+              example: uuid
+              summary: 'UUID value.'
+              value: 0006faf6-7a61-426c-9034-579f2cfcfa83
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Parcel'
+      security:
+        - bearerAuth: []
+components:
+  schemas:
+    Parcel:
+      properties:
+        id:
+          description: 'identifiant unique au format uuid 18292e08-953f-470f-beba-06daa24c0cc3'
+          type: integer
+        parcel_name:
+          description: 'le titre du colis'
+          type: string
+          nullable: true
+        point_depart:
+          description: 'le lieu de depart du colis (ville|quartier)'
+          type: string
+          nullable: true
+        point_final:
+          description: 'la destination du colis (ville|quartier)'
+          type: string
+          nullable: true
+        valeur_colis:
+          description: 'l''estimation monetaire du contenu du colis'
+          type: integer
+          nullable: true
+        price_expedition:
+          description: 'le prix pour l''expedition du colis'
+          type: int
+          nullable: true
+        destinataire:
+          description: 'les reférences du destinataire'
+          type: integer
+        expediteur:
+          description: 'les reférences de l''expediteur'
+          type: integer
+        descrip_colis:
+          description: 'la description du colis(les différents éléments du colis)'
+          type: text
+          nullable: true
+        status_tracking:
+          description: 'le colis est arrivé à destination ou en cours'
+          type: integer
+          nullable: true
+        date_depart:
+          description: 'la date de depart du colis'
+          type: string
+          format: date-time
+          nullable: true
+        date_arrived:
+          description: 'la date d''arrivé du colis'
+          type: string
+          format: date-time
+          nullable: true
+        code_retrait:
+          description: 'code de retrait à presenté par le destinataire du colis'
+          type: string
+          nullable: true
+      type: object
+    User:
+      properties:
+        username:
+          description: 'Nom d''utilisateur de connexion'
+          type: string
+        password:
+          description: 'The hashed password'
+          type: string
+        nom:
+          description: 'Nom de famille'
+          type: string
+          nullable: true
+        prenoms:
+          description: prenoms
+          type: string
+        email:
+          description: 'Adresse email de l\''utilisateur'
+          type: email
+        numero_tel:
+          description: 'Numero de telephone'
+          type: integer
+      type: object
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

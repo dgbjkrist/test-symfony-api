@@ -9,11 +9,20 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
+use OpenApi\Annotations as OA;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="users")
  * @ORM\HasLifecycleCallbacks
+ * @OA\Schema()
+ * @UniqueEntity(
+ *     fields={"username"},
+ *     errorPath="username",
+ *     message="Le nom d'utilisateur est deja utilise."
+ * )
  */
 class User implements UserInterface
 {
@@ -24,13 +33,16 @@ class User implements UserInterface
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidV4Generator::class)
-     * @Groups({"get:parcels"})
+     * @Groups({"getparcel"})
+     * @var int|null identifiant unique au format uuid 18292e08-953f-470f-beba-06daa24c0cc3
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"get:parcels"})
+     * @Groups({"getcollectionofparcel", "getparcel"})
+     * @OA\Property(type="string")
+     * @var string|null Nom d'utilisateur de connexion
      */
     private $username;
 
@@ -42,30 +54,40 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @OA\Property(type="string")
+     * @var string|null Mot de passe
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get:parcels"})
+     * @Groups({"getcollectionofparcel", "getparcel"})
+     * @OA\Property(type="string", nullable=true)
+     * @var string|null Nom de famille
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get:parcels"})
+     * @Groups({"getcollectionofparcel", "getparcel"})
+     * @OA\Property(type="string")
+     * @var string|null prenoms
      */
     private $prenoms;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get:parcels"})
+     * @Groups({"getparcel"})
+     * @OA\Property(type="email")
+     * @var string|null Adresse email de l\'utilisateur
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"get:parcels"})
+     * @Groups({"getcollectionofparcel", "getparcel"})
+     * @OA\Property(type="integer")
+     * @var int|null Numero de telephone
      */
     private $numero_tel;
 

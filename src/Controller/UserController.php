@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,7 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use App\Entity\User;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use \Exception as Exception;
 
 class UserController extends AbstractController
 {
@@ -21,32 +24,68 @@ class UserController extends AbstractController
      * @param  UserPasswordEncoderInterface $encoder [description]
      * @param  EntityManagerInterface       $em      [description]
      * @return JsonResponse                                [description]
-     * @Route("/register", methods={"POST"})
+     * @Route("/users", methods={"POST"})
+     * @OA\Post(
+     *     path="/users",
+     *     summary="Creer un nouvel utilisateur",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Items(
+     *                 ref="#/components/schemas/User"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK"
+     *     )
+     * )
      */
     public function register(Request $request,
         SerializerInterface $serializer,
         UserPasswordEncoderInterface $encoder,
-        EntityManagerInterface $em):JsonResponse
+        EntityManagerInterface $em,
+        ValidatorInterface $validator):JsonResponse
     {
 
         $datas = $request->getContent();
-        $pwd=json_decode($datas);
-        $pwd= $pwd->password;
+        try {
+            $pwd=json_decode($datas);
+            $pwd= $pwd->password;
 
 
-        $datauser = $serializer->deserialize($datas, User::class, 'json');
+            $datauser = $serializer->deserialize($datas, User::class, 'json');
 
-        $datauser->setPassword($encoder->encodePassword($datauser, $pwd));
+            $datauser->setPassword($encoder->encodePassword($datauser, $pwd));
 
-        $em->persist($datauser);
+            // $errors = $validator->validate($datauser);
 
-        $em->persist($datauser);
+            // dd($errors);
 
-        $em->flush();
+            if ($validator->validate($datauser)) {
+                return $this->json([
+                    'message'=>'Le username est deja utilise',
+                    'status code'=> 400], 400);
+            }
 
-        $response=$this->json($datauser, 201, [], ['groups'=>'get:parcels']);
+            $em->persist($datauser);
 
-        return $response;
+            $em->flush();
+
+            $response=$this->json([
+                'message'=>'successfully, vous pouvez demander un token',
+                'data'=>$datas], 201, [], ['groups'=>'getparcel']);
+
+            return $response;
+        } catch (Exception $e) {
+            return $this->json([
+                'status' => 400,
+                'message' => $e->getMessage()
+            ], 400);
+        }
         
     }
 }
